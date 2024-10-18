@@ -1,15 +1,15 @@
 Spring 레거시로 구현한 뮤지컬 예매 사이트 입니다.
 
-개발환경 : Spring Framework 3.0, jdk8.0, Tomcat, JSP, Oracle21, React
-  라이브러리 : MyBatis, Ajax, pdfbox, apache.poi, twelvemonkeys.imageio, select2, 카카오맵 API
-담당역할 : 고객센터(이용안내, FAQ, 공지사항), 관리자 페이지 기능 구현
+개발환경 : Spring Framework 3.0, jdk8.0, Tomcat, JSP, Oracle21, React <br>
+  라이브러리 : MyBatis, Ajax, pdfbox, apache.poi, twelvemonkeys.imageio, select2, 카카오맵 API <br>
+담당역할 : 고객센터(이용안내, FAQ, 공지사항), 관리자 페이지 기능 구현 <br>
 
 ![image](https://github.com/user-attachments/assets/77efbb5e-4f7a-4743-8c18-8cfd54995ae5) ![image](https://github.com/user-attachments/assets/6050bdec-b8f4-4d64-aefe-2b606def76e1)
 
 검색 기능과 함께 페이징 처리를 하였으며, Model을 통해 뷰로 전달된 데이터를 화면에 렌더링 
 - FAQ,공지사항 게시판은 JSP뿐만 아니라 react로 추가 구현
 - FAQ 게시글의 추가,수정,삭제는 Ajax 요청을 사용하여 서버와 비동기 통신하여 데이터를 처리
-
+ <br> <br>
 
 ![image](https://github.com/user-attachments/assets/46d7f0cd-a851-42bc-a586-397224b7958e) ![image](https://github.com/user-attachments/assets/992c362b-dc4c-490d-86de-bb6f7d0e3847)
 
@@ -24,7 +24,7 @@ Spring 레거시로 구현한 뮤지컬 예매 사이트 입니다.
 - 엑셀 파일 다운로드 시, 전체 페이지 새로고침 없이 검색 조건에 맞는 데이터를 즉시 다운로드 받을 수 있도록 jQuery Ajax 요청을 통해 비동기 처리를 적용
 - 이 기능은 사용자가 대규모 데이터 세트를 직관적으로 조회하고, 보고서나 데이터 분석 목적으로 활용할 수 있도록 설계됨
 
-
+ <br> <br>
 ![image](https://github.com/user-attachments/assets/643c619d-b957-47d4-af5f-f395f0396c1e)
 
 극장추가, 수정 작업 시 극장명을 입력하고 카카오 지도 API를 통해 해당 장소의 주소 및 위치 정보를 검색

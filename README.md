@@ -1,6 +1,6 @@
 Spring 레거시로 구현한 뮤지컬 예매 사이트 입니다.
 
-1. 개발환경 : Spring Framework 3.0, jdk8.0, Tomcat, JSP, Oracle21, React <br>
+1. 개발환경 : Spring Framework 3.0, Oracle21, Tomcat, JSP, JavaScript, JQuery, EL,JSTL, React <br>
   라이브러리 : MyBatis, Ajax, pdfbox, apache.poi, twelvemonkeys.imageio, select2, 카카오맵 API <br>
 2. 담당역할 : 고객센터(이용안내, FAQ, 공지사항), 관리자 페이지 기능 구현 <br>
 

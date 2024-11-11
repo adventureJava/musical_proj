@@ -1,0 +1,272 @@
+`notice.js` 파일을 모듈화하는 작업을 위해 주요 부분을 여러 개의 작은 컴포넌트로 분리할 수 있습니다. 이렇게 분리하면 각 컴포넌트가 독립적으로 관리되고, 코드의 재사용성과 가독성이 향상됩니다.
+
+### 1. **주요 컴포넌트 분리**
+- **Pagination**: 페이지네이션 관련 로직을 별도로 분리.
+- **NoticeList**: 공지사항 리스트를 처리하는 컴포넌트.
+- **SearchForm**: 검색 폼을 별도의 컴포넌트로 분리.
+- **CategoryTabs**: 카테고리 탭을 관리하는 컴포넌트.
+
+### 2. **파일 구조**
+```plaintext
+src/
+  components/
+    CategoryTabs.js
+    NoticeList.js
+    Pagination.js
+    SearchForm.js
+  pages/
+    NOTICE.js
+  App.js
+```
+
+### 3. **각 컴포넌트 구현**
+
+#### 1. **CategoryTabs.js**
+```javascript
+import React from 'react';
+
+const CategoryTabs = ({ setNGroupKind }) => {
+  return (
+    <div className="cs_board">
+      <ul className="list_board_sort">
+        <li className="_cat02" data-cat="02"><a href="#" onClick={() => setNGroupKind('전체')} className="link_tab _faqCategory">전체</a></li>
+        <li className="_cat06" data-cat="06"><a href="#" onClick={() => setNGroupKind('티켓오픈')} className="link_tab _faqCategory">티켓오픈</a></li>
+        <li className="_cat01" data-cat="01"><a href="#" onClick={() => setNGroupKind('스포츠')} className="link_tab _faqCategory">스포츠</a></li>
+        <li className="_cat09" data-cat="09"><a href="#" onClick={() => setNGroupKind('변경/취소')} className="link_tab _faqCategory">변경/취소</a></li>
+        <li className="_cat10" data-cat="10"><a href="#" onClick={() => setNGroupKind('시스템관련')} className="link_tab _faqCategory">시스템관련</a></li>
+        <li className="_cat10" data-cat="10"><a href="#" onClick={() => setNGroupKind('기타')} className="link_tab _faqCategory">기타</a></li>
+      </ul>
+    </div>
+  );
+};
+
+export default CategoryTabs;
+```
+
+#### 2. **NoticeList.js**
+```javascript
+import React from 'react';
+import { Link } from 'react-router-dom';
+
+const NoticeList = ({ notices }) => {
+  return (
+    <table border="0" className="tb_board tb_qna">
+      <colgroup>
+        <col width="15%" />
+        <col width="63%" />
+        <col width="15%" />
+        <col width="7%" />
+      </colgroup>
+      <thead>
+        <tr>
+          <th scope="col">카테고리</th>
+          <th scope="col">제목</th>
+          <th scope="col">오픈/등록일</th>
+          <th scope="col">조회수</th>
+        </tr>
+      </thead>
+      <tbody>
+        {notices.map((notice, index) => (
+          <React.Fragment key={index}>
+            <tr className="item">
+              <td>{notice.nGroupKind}</td>
+              <td><Link to={`/notice_read/${notice.nId}`}>{notice.nTitle}</Link></td>
+              <td>{notice.nOpenTime ? (
+                <>오픈: {new Date(notice.nOpenTime).toLocaleString()}</>
+              ) : (new Date(notice.nWriteTime).toLocaleString())}</td>
+              <td>{notice.nHit}</td>
+            </tr>
+          </React.Fragment>
+        ))}
+      </tbody>
+    </table>
+  );
+};
+
+export default NoticeList;
+```
+
+#### 3. **Pagination.js**
+```javascript
+import React from 'react';
+
+const Pagination = ({ page, totalPages, startPage, endPage, prev, next, handlePageChange }) => {
+  return (
+    <div className="pagination">
+      {/* 첫 페이지로 이동 */}
+      {page !== 1 && (
+        <a href="#" onClick={(e) => { e.preventDefault(); handlePageChange(1); }}>&lt;&lt;&lt;</a>
+      )}
+
+      {/* 이전 페이지 그룹으로 이동 */}
+      {prev && (
+        <a href="#" onClick={(e) => { e.preventDefault(); handlePageChange(startPage - 1); }}>&lt;&lt;</a>
+      )}
+
+      {/* 이전 페이지로 이동 */}
+      {page > 1 && (
+        <a href="#" onClick={(e) => { e.preventDefault(); handlePageChange(page - 1); }}>&lt;</a>
+      )}
+
+      {/* 페이지 번호 표시 */}
+      {Array.from({ length: endPage - startPage + 1 }, (_, idx) => {
+        const pageIndex = startPage + idx;
+        return (
+          <a
+            key={pageIndex}
+            href="#"
+            className={page === pageIndex ? 'active' : ''}
+            onClick={(e) => { e.preventDefault(); handlePageChange(pageIndex); }}
+          >
+            {pageIndex}
+          </a>
+        );
+      })}
+
+      {/* 다음 페이지로 이동 */}
+      {page < totalPages && (
+        <a href="#" onClick={(e) => { e.preventDefault(); handlePageChange(page + 1); }}>&gt;</a>
+      )}
+
+      {/* 다음 페이지 그룹으로 이동 */}
+      {next && (
+        <a href="#" onClick={(e) => { e.preventDefault(); handlePageChange(endPage + 1); }}>&gt;&gt;</a>
+      )}
+
+      {/* 마지막 페이지로 이동 */}
+      {page !== totalPages && (
+        <a href="#" onClick={(e) => { e.preventDefault(); handlePageChange(totalPages); }}>&gt;&gt;&gt;</a>
+      )}
+    </div>
+  );
+};
+
+export default Pagination;
+```
+
+#### 4. **SearchForm.js**
+```javascript
+import React from 'react';
+
+const SearchForm = ({ searchType, setSearchType, keyword, setKeyword }) => {
+  return (
+    <div className="search_faq">
+      <select name="searchType" value={searchType} onChange={(e) => setSearchType(e.target.value)}>
+        <option value="제목">제목</option>
+        <option value="내용">내용</option>
+        <option value="제목내용">제목+내용</option>
+      </select>
+      <input type="text" name="keyword" id="keywordInput" placeholder="검색어 입력"
+        value={keyword} onChange={(e) => setKeyword(e.target.value)} />
+      <button id="searchBtn">검색</button>
+    </div>
+  );
+};
+
+export default SearchForm;
+```
+
+### 4. **최종 `NOTICE.js`**
+이제 `NOTICE.js`에서는 위에서 분리한 컴포넌트들을 가져와서 사용합니다.
+
+```javascript
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import CategoryTabs from '../components/CategoryTabs';
+import NoticeList from '../components/NoticeList';
+import Pagination from '../components/Pagination';
+import SearchForm from '../components/SearchForm';
+
+const NOTICE = () => {  
+  const [notices, setNotices] = useState([]);
+  const [nGroupKind, setNGroupKind] = useState('전체');
+  const [keyword, setKeyword] = useState('');
+  const [searchType, setSearchType] = useState('');
+  const [page, setPage] = useState(1);
+  const [perPageNum] = useState(10);
+  const [totalPages, setTotalPages] = useState(1);
+  const [startPage, setStartPage] = useState(1);
+  const [endPage, setEndPage] = useState(1);
+  const [prev, setPrev] = useState(false);
+  const [next, setNext] = useState(false);
+  const displayPageNum = 10;
+
+  useEffect(() => {
+    fetchNotices();
+  }, [page, nGroupKind, keyword]);
+
+  const fetchNotices = async () => {
+    try {
+      const response = await axios.get('http://localhost:8082/cs/api/notice', {
+        params: { 
+          nGroupKind,
+          searchType,
+          keyword,
+          page,
+          perPageNum
+        }
+      });
+      setNotices(response.data.notices);
+      setTotalPages(response.data.totalPages);
+      calculatePagination(response.data.totalPages);
+    } catch (error) {
+      console.error('Error fetching notices:', error);
+    }
+  };
+
+  const calculatePagination = (totalPages) => {
+    const currentEndPage = Math.min(Math.ceil(page / displayPageNum) * displayPageNum, totalPages);
+    const currentStartPage = currentEndPage - displayPageNum + 1;
+
+    setStartPage(Math.max(currentStartPage, 1));
+    setEndPage(currentEndPage);
+    setPrev(currentStartPage > 1);
+    setNext(currentEndPage < totalPages);
+  };
+
+  const handlePageChange = (pageNumber) => {
+    setPage(pageNumber);
+  };
+
+
+
+  return (
+    <div id="wrap">
+      <div id="contents">
+        <div id="content">
+          <div className="board_qna">
+            <h1 id="qna_head">공지사항</h1>
+            <CategoryTabs setNGroupKind={setNGroupKind} />
+            <NoticeList notices={notices} />
+            <Pagination
+              page={page}
+              totalPages={totalPages}
+              startPage={startPage}
+              endPage={endPage}
+              prev={prev}
+              next={next}
+              handlePageChange={handlePageChange}
+            />
+            <SearchForm
+              searchType={searchType}
+              setSearchType={setSearchType}
+              keyword={keyword}
+              setKeyword={setKeyword}
+            />
+            <Link to={`/notice_register`}><button className="newBtn">새 글</button></Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default NOTICE;
+```
+
+### 5. **모듈화 후의 장점**
+1. **가독성**: 각 컴포넌트가 독립적으로 관리되므로 코드가 훨씬 깔끔해지고, 필요한 부분만 쉽게 수정할 수 있습니다.
+2. **재사용성**: 다른 페이지나 기능에서 각 컴포넌트를 재사용할 수 있습니다.
+3. **유지보수성**: 각 컴포넌트가 잘 분리되어 있기 때문에, 특정 기능에 문제가 생겼을 때 수정하기 쉽습니다.
+
+이렇게 `NOTICE.js`를 여러 개의 작은 컴포넌트로 분리하여 관리하면 코드가 훨씬 간결해지고, 유지보수가 용이해집니다.
